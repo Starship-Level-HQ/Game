@@ -4,6 +4,7 @@ require("dialog")
 require("inventory.src.objectsOnMap")
 require("NPCs/zombee")
 require("NPCs/kaban")
+require("NPCs/leshiy")
 
 local level = {}
 local enemies
@@ -16,14 +17,14 @@ local levels = {
     {
         map = "res/maps/testMap.lua",
         playerPosition = { 300, 450 },
-        enemyPositions = { { 600, 100 }, { 600, 200 }, { 600, 300 } },
+        enemyPositions = { { 600, 100, Kaban}, { 600, 200, Zombee}, { 600, 300, Kaban} },
         lakePosition = { 400, 550 },
         loot = { { 350, 400, 1 } } -- x y id
     },
     {
         map = "res/maps/testMap.lua",
         playerPosition = { 100, 200 },
-        enemyPositions = { { 400, 100 }, { 500, 200 }, { 600, 300 }, { 700, 400 } },
+        enemyPositions = { { 400, 100, Zombee }, { 500, 200, Zombee }, { 600, 300, Zombee }, { 700, 400, Leshiy } },
         lakePosition = { 300, 400 }
     }
     -- Добавляйте больше уровней с разными настройками
@@ -48,11 +49,7 @@ function level.startLevel(levelNumber)
 
     for i, p in ipairs(levelData.enemyPositions) do
         local enemy
-        if i % 2 ~= 0 then
-            enemy = Enemy.new(world, p[1], p[2], i % 2 == 0, 250, 100, Kaban.new())
-        else
-            enemy = Enemy.new(world, p[1], p[2], i % 2 == 0, 250, 100, Zombee.new())
-        end
+        enemy = Enemy.new(world, p[1], p[2], 250, 100, p[3].new())
         table.insert(enemies, enemy)
     end
 

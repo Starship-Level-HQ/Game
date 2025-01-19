@@ -1,12 +1,12 @@
 require("config/logger")
 require("physics")
 require("libraries/anim8")
+userConfig = require("userConfig")
 local menu = require("menu")
 local level = require("level")
 local multiplayer = require("multiplayer/multiplayer")
 sti = require("libraries/sti")
 cat = require("objectsCategories")
-userConfig = require("userConfig")
 camera = require("libraries/camera")
 cam = camera()
 

@@ -7,14 +7,14 @@ PlayerUpdate = {
                 speed = speed + self.dashSpeed
             end
 
-            if love.keyboard.isDown("left") then
+            if love.keyboard.isDown(userConfig.leftButton) then
                 xv, yv = self.body:getLinearVelocity()
                 self.body:setLinearVelocity(-speed, yv)
                 self.anim = self.animations.left
                 self.direction = "l"
                 self.serverDirectionX = "l"
                 isMoving = true
-            elseif love.keyboard.isDown("right") then
+            elseif love.keyboard.isDown(userConfig.rightButton) then
                 xv, yv = self.body:getLinearVelocity()
                 self.body:setLinearVelocity(speed, yv)
                 self.anim = self.animations.right
@@ -27,14 +27,14 @@ PlayerUpdate = {
                 self.serverDirectionX = ""
             end
 
-            if love.keyboard.isDown("up") then
+            if love.keyboard.isDown(userConfig.upButton) then
                 xv, yv = self.body:getLinearVelocity()
                 self.body:setLinearVelocity(xv, -speed)
                 self.anim = self.animations.up
                 self.direction = "u"
                 self.serverDirectionY = "u"
                 isMoving = true
-            elseif love.keyboard.isDown("down") then
+            elseif love.keyboard.isDown(userConfig.downButton) then
                 xv, yv = self.body:getLinearVelocity()
                 self.body:setLinearVelocity(xv, speed)
                 self.anim = self.animations.down

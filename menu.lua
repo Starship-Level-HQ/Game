@@ -2,6 +2,7 @@ local menu = {}
 
 local menuRouter = { "main" } -- solo, multiplayer, settings, список если вдруг понадобится более сложная вложеная менюшка
 local activeInputButton = nil
+local activeButton = nil
 
 local cursorBlink = true -- Для мигания курсора
 local cursorBlinkTimer = 0
@@ -12,7 +13,7 @@ local buttons = {
     main = {
         { text = "Camping",     action = function() table.insert(menuRouter, "solo") end },
         { text = "Multiplayer", action = function() table.insert(menuRouter, "multiplayer") end },
-        { text = "Settings",    action = function() userConfig.blood = not userConfig.blood end },
+        { text = "Settings",    action = function() table.insert(menuRouter, "settings") end },
         { text = "Exit",        action = function() love.event.quit() end }
     },
     solo = {
@@ -34,6 +35,76 @@ local buttons = {
             action = function()
                 local channel = activeInputButton ~= nil and activeInputButton.text or "Morena"
                 startMultiplayer(channel)
+            end
+        },
+        { text = "Back", action = function() table.remove(menuRouter) end }
+    },
+    settings = {
+        {
+            text = "Blood - " .. tostring(userConfig.blood),
+            action = function(self)
+              userConfig.blood = not userConfig.blood
+              self.text = "Blood - " .. tostring(userConfig.blood)
+            end
+        },
+        { text = "Controls",    action = function() table.insert(menuRouter, "controls") end },
+        { text = "Back", action = function() table.remove(menuRouter) end }
+    },
+    controls = {
+      {
+            name = "go left",
+            text = "go left",
+            action = function(self)
+              self.text = userConfig.leftButton
+              if activeInputButton then
+                activeInputButton.text = activeInputButton.name
+              end
+              activeInputButton = self
+            end,
+            onUpdate = function() 
+              userConfig.leftButton = activeInputButton.text
+            end
+        },
+        {
+            name = "go right",
+            text = "go right",
+            action = function(self)
+              self.text = userConfig.rightButton
+              if activeInputButton then
+                activeInputButton.text = activeInputButton.name
+              end
+              activeInputButton = self
+            end,
+            onUpdate = function() 
+              userConfig.rightButton = activeInputButton.text
+            end
+        },
+        {
+            name = "go up",
+            text = "go up",
+            action = function(self)
+              self.text = userConfig.upButton
+              if activeInputButton then
+                activeInputButton.text = activeInputButton.name
+              end
+              activeInputButton = self
+            end,
+            onUpdate = function() 
+              userConfig.upButton = activeInputButton.text
+            end
+        },
+        {
+            name = "go down",
+            text = "go down",
+            action = function(self)
+              self.text = userConfig.downButton
+              if activeInputButton then
+                activeInputButton.text = activeInputButton.name
+              end
+              activeInputButton = self
+            end,
+            onUpdate = function() 
+              userConfig.downButton = activeInputButton.text
             end
         },
         { text = "Back", action = function() table.remove(menuRouter) end }
@@ -143,6 +214,11 @@ local function isMouseOverButton(x, y, button)
 end
 
 function menu.mousepressed(x, y, button)
+  
+    if activeButton then
+        activeButton.action()
+    end
+
     if button == 1 then -- Левый клик
         local currentState = menuRouter[#menuRouter]
         local currentButtons = buttons[currentState]
@@ -150,9 +226,11 @@ function menu.mousepressed(x, y, button)
         for _, btn in ipairs(currentButtons) do
             if isMouseOverButton(x, y, btn) then
                 btn.action(btn)
-                break
+                return
             end
         end
+        activeInputButton.text = activeInputButton.name
+        activeInputButton = nil
     end
 end
 
@@ -160,6 +238,7 @@ function menu.textinput(text)
     _log(text)
     if activeInputButton then
         activeInputButton.text = activeInputButton.text .. text
+        activeInputButton.onUpdate()
     end
 end
 

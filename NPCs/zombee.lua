@@ -11,6 +11,7 @@ Zombee = {
     self.animations.up = anim8.newAnimation(self.grid('1-4', 4), 0.2)
     self.animations.right = anim8.newAnimation(self.grid('1-4', 3), 0.2)
     self.animations.left = anim8.newAnimation(self.grid('1-4', 2), 0.2)
+    self.canShoot = true
     
     self.deadSpriteSheet = love.graphics.newImage('res/sprites/enemy-dead.png')
     self.deadGrid = anim8.newGrid(12, 18, self.deadSpriteSheet:getWidth(), self.deadSpriteSheet:getHeight())
